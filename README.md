@@ -36,7 +36,7 @@ Daily historical sales at the granularity of **store × product family × date**
 ### 2. `test.csv` — Future Observation Window
 
 Contains the **15 days immediately following** the last date in `train.csv`.  
-Schema is identical to `train.csv`.
+Schema is identical to `train.csv`, except the column "sales" is not present in test.
 
 ### Notes for Data Engineering
 - Used to validate pipeline reproducibility across unseen dates.
@@ -180,12 +180,6 @@ erDiagram
         int transactions
     }
 
-    CONTEXT_FACTORS {
-        date date
-        string factor_type
-        string details
-    }
-
     %% Relationships
     TRAIN ||--|| STORES : "store_nbr"
     TEST  ||--|| STORES : "store_nbr"
@@ -199,9 +193,6 @@ erDiagram
 
     TRAIN ||--o{ HOLIDAYS_EVENTS : "date"
     TEST  ||--o{ HOLIDAYS_EVENTS : "date"
-
-    TRAIN ||--o{ CONTEXT_FACTORS : "date"
-    TEST  ||--o{ CONTEXT_FACTORS : "date"
 
 ```
 ---
