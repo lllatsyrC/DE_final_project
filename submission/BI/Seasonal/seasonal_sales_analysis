@@ -1,0 +1,20 @@
+WITH max_date AS (
+    SELECT MAX(date) AS last_date
+    FROM final_project.gold.actuals_with_target
+),
+
+daily_sales AS (
+    SELECT
+        g.date,
+        SUM(g.sales) AS total_sales,
+        -- National holiday marker: convert boolean to integer
+        MAX(CAST(g.is_national_holiday AS INT)) AS holiday_marker
+    FROM final_project.gold.actuals_with_target g
+    CROSS JOIN max_date md
+    WHERE g.date BETWEEN date_sub(md.last_date, 364) AND md.last_date
+    GROUP BY g.date
+)
+
+SELECT *
+FROM daily_sales
+ORDER BY date ASC;
